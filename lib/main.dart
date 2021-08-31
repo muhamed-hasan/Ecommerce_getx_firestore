@@ -1,3 +1,4 @@
+import 'package:e_commerce_getx/constants.dart';
 import 'package:e_commerce_getx/view/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
+        primaryColor: Colors.lightGreen,
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.lightGreen,
+        ).copyWith(),
       ),
       home: LoginScreen(),
     );
