@@ -59,4 +59,15 @@ class AuthViewModel extends GetxController {
       Get.snackbar('', e.toString());
     }
   }
+
+  void createAccountWithMail() async {
+    try {
+      await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      Get.offAll(() => HomeScreen());
+    } catch (e) {
+      print(e);
+      Get.snackbar('', e.toString());
+    }
+  }
 }
