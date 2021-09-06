@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:e_commerce_getx/core/service/firestore_user.dart';
+import 'package:e_commerce_getx/model/user_model.dart';
 import 'package:e_commerce_getx/view/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,7 +39,10 @@ class AuthViewModel extends GetxController {
       idToken: googleSigninAuth.idToken,
       accessToken: googleSigninAuth.accessToken,
     );
-    await _auth.signInWithCredential(credential);
+    await _auth.signInWithCredential(credential).then((userCredential) async {
+      saveUser(userCredential);
+      Get.offAll(() => HomeScreen());
+    });
   }
 
   void signInWithFacebook() async {
@@ -47,12 +52,21 @@ class AuthViewModel extends GetxController {
         FacebookAuthProvider.credential(loginResult.accessToken!.token);
 
     // Once signed in, return the UserCredential
-    await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+    await FirebaseAuth.instance
+        .signInWithCredential(facebookAuthCredential)
+        .then((userCredential) async {
+      saveUser(userCredential);
+      Get.offAll(() => HomeScreen());
+    });
   }
 
   void signInWithMail() async {
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      await _auth
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((userCredential) async {
+        saveUser(userCredential);
+      });
       Get.offAll(() => HomeScreen());
     } catch (e) {
       print(e);
@@ -62,12 +76,24 @@ class AuthViewModel extends GetxController {
 
   void createAccountWithMail() async {
     try {
-      await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      await _auth
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((userCredential) async {
+        saveUser(userCredential);
+      });
+
       Get.offAll(() => HomeScreen());
     } catch (e) {
       print(e);
       Get.snackbar('', e.toString());
     }
+  }
+
+  saveUser(UserCredential userCredential) async {
+    await FirestoreUser().addUserToFireStore(UserModel(
+        userId: userCredential.user!.uid,
+        email: userCredential.user!.email!,
+        name: name == '' ? userCredential.user!.displayName! : name,
+        pic: ''));
   }
 }
