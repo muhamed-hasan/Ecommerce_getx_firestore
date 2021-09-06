@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:e_commerce_getx/view/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -11,10 +12,21 @@ class AuthViewModel extends GetxController {
   final _googleSignIn = GoogleSignIn(scopes: ['email']);
 
   final _auth = FirebaseAuth.instance;
-  final _facebookLogin = FacebookAuth.instance.login();
+  final _facebookLogin = FacebookAuth.instance;
+  String email = '', password = '', name = '';
+
+  Rxn<User> _user = Rxn<User>();
+  String? get user {
+    if (_user.value == null) return null;
+
+    return _user.value!.email;
+  }
+
   @override
   void onInit() {
     super.onInit();
+    print('init user ');
+    _user.bindStream(_auth.authStateChanges());
   }
 
   void googleSignInMethod() async {
@@ -25,19 +37,26 @@ class AuthViewModel extends GetxController {
       idToken: googleSigninAuth.idToken,
       accessToken: googleSigninAuth.accessToken,
     );
-    final userCredential = await _auth.signInWithCredential(credential);
-    print(googleUser);
+    await _auth.signInWithCredential(credential);
   }
 
-  Future<UserCredential> signInWithFacebook() async {
-    // Trigger the sign-in flow
-    final LoginResult loginResult = await FacebookAuth.instance.login();
-
+  void signInWithFacebook() async {
+    final LoginResult loginResult = await _facebookLogin.login();
     // Create a credential from the access token
     final OAuthCredential facebookAuthCredential =
         FacebookAuthProvider.credential(loginResult.accessToken!.token);
 
     // Once signed in, return the UserCredential
-    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+    await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+  }
+
+  void signInWithMail() async {
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      Get.offAll(() => HomeScreen());
+    } catch (e) {
+      print(e);
+      Get.snackbar('', e.toString());
+    }
   }
 }
