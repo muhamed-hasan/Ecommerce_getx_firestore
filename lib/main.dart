@@ -1,5 +1,5 @@
 import 'package:e_commerce_getx/helper/binding.dart';
-import 'package:e_commerce_getx/view/control_view.dart';
+import 'package:e_commerce_getx/view/control_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.lightGreen,
         ).copyWith(),
       ),
-      home: ControlView(),
+      home: ControlScreen(),
     );
   }
 }

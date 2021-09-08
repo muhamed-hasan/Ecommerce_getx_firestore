@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:e_commerce_getx/core/service/firestore_user.dart';
 import 'package:e_commerce_getx/model/user_model.dart';
-import 'package:e_commerce_getx/view/home.dart';
+import 'package:e_commerce_getx/view/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
