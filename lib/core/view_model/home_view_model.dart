@@ -1,30 +1,27 @@
-import 'package:e_commerce_getx/view/cart_screen.dart';
-import 'package:e_commerce_getx/view/home_screen.dart';
-import 'package:e_commerce_getx/view/profile_screen.dart';
-import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_commerce_getx/core/service/home_service.dart';
+import 'package:e_commerce_getx/model/category_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 
 class HomeViewModel extends GetxController {
-  int _navIndex = 0;
-  Widget _currentScreen = HomeScreen();
+  ValueNotifier<bool> get loading => _loading;
+  ValueNotifier<bool> _loading = ValueNotifier(false);
+  List<CategoryModel> _categoryModel = [];
+  List<CategoryModel> get categoryModel => _categoryModel;
 
-  get navIndex => _navIndex;
-  get currentScreen => _currentScreen;
-  changeIndex(int index) {
-    _navIndex = index;
-    switch (index) {
-      case 0:
-        _currentScreen = HomeScreen();
-        break;
-      case 1:
-        _currentScreen = CartScreen();
-        break;
-      case 2:
-        _currentScreen = ProfileScreen();
-        break;
-      default:
-        _currentScreen = HomeScreen();
-    }
-    update();
+  HomeViewModel() {
+    getCategory();
+  }
+  getCategory() async {
+    _loading.value = true;
+    await HomeService().getCategory().then((value) {
+      for (var i = 0; i < value.length; i++) {
+        _categoryModel.add(CategoryModel.fromMap(value[i].data()));
+      }
+      _loading.value = false;
+      update();
+    });
   }
 }
