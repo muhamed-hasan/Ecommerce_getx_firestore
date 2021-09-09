@@ -18,11 +18,6 @@ class HomeScreen extends StatelessWidget {
       builder: (controller) => controller.loading.value
           ? Center(child: CircularProgressIndicator())
           : Scaffold(
-              // bottomNavigationBar: _bottomNavBar(),
-              appBar: AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-              ),
               body: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
@@ -107,43 +102,45 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _productListView() {
-    return Container(
-      height: 350,
-      child: ListView.separated(
-        separatorBuilder: (context, index) => SizedBox(width: 20),
-        scrollDirection: Axis.horizontal,
-        itemCount: 10,
-        itemBuilder: (BuildContext context, int index) {
-          return Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.grey.shade100),
-                    width: 200,
-                    height: 220,
-                    child: Image.asset(
-                      'assets/images/chaire.png',
-                      fit: BoxFit.contain,
-                    )),
-                SizedBox(height: 10),
-                CustomText(text: 'Speaker'),
-                SizedBox(height: 10),
-                CustomText(
-                  text: 'Speaker description',
-                  color: Colors.grey,
-                ),
-                SizedBox(height: 10),
-                CustomText(
-                  text: '\$100',
-                  color: primaryColor,
-                ),
-              ],
-            ),
-          );
-        },
+    return GetBuilder<HomeViewModel>(
+      builder: (controller) => Container(
+        height: 350,
+        child: ListView.separated(
+          separatorBuilder: (context, index) => SizedBox(width: 20),
+          scrollDirection: Axis.horizontal,
+          itemCount: controller.productModel.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.grey.shade100),
+                      width: 200,
+                      height: 220,
+                      child: Image.network(
+                        controller.productModel[index].image!,
+                        fit: BoxFit.contain,
+                      )),
+                  SizedBox(height: 10),
+                  CustomText(text: controller.productModel[index].name),
+                  SizedBox(height: 10),
+                  CustomText(
+                    text: controller.productModel[index].description,
+                    color: Colors.grey,
+                  ),
+                  SizedBox(height: 10),
+                  CustomText(
+                    text: '\$' + controller.productModel[index].price!,
+                    color: primaryColor,
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
