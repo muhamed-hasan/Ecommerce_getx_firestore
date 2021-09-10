@@ -3,18 +3,21 @@ import 'package:e_commerce_getx/core/view_model/control_view_model.dart';
 import 'package:e_commerce_getx/core/view_model/home_view_model.dart';
 import 'package:e_commerce_getx/helper/binding.dart';
 import 'package:e_commerce_getx/view/auth/login_screen.dart';
+import 'package:e_commerce_getx/view/details_screen.dart';
 import 'package:e_commerce_getx/view/widgets/custom_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 
 class HomeScreen extends StatelessWidget {
-  final _auth = FirebaseAuth.instance;
+  // final _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeViewModel>(
+      init: Get.find<HomeViewModel>(), //fix initializing homeViewModel error
       builder: (controller) => controller.loading.value
           ? Center(child: CircularProgressIndicator())
           : Scaffold(
@@ -110,33 +113,39 @@ class HomeScreen extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           itemCount: controller.productModel.length,
           itemBuilder: (BuildContext context, int index) {
-            return Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.grey.shade100),
-                      width: 200,
-                      height: 220,
-                      child: Image.network(
-                        controller.productModel[index].image!,
-                        fit: BoxFit.contain,
-                      )),
-                  SizedBox(height: 10),
-                  CustomText(text: controller.productModel[index].name),
-                  SizedBox(height: 10),
-                  CustomText(
-                    text: controller.productModel[index].description,
-                    color: Colors.grey,
-                  ),
-                  SizedBox(height: 10),
-                  CustomText(
-                    text: '\$' + controller.productModel[index].price!,
-                    color: primaryColor,
-                  ),
-                ],
+            return GestureDetector(
+              onTap: () {
+                Get.to(() => DetailsScreen(
+                    productModel: controller.productModel[index]));
+              },
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.grey.shade100),
+                        width: 200,
+                        height: 220,
+                        child: Image.network(
+                          controller.productModel[index].image!,
+                          fit: BoxFit.contain,
+                        )),
+                    SizedBox(height: 10),
+                    CustomText(text: controller.productModel[index].name),
+                    SizedBox(height: 10),
+                    CustomText(
+                      text: controller.productModel[index].description,
+                      color: Colors.grey,
+                    ),
+                    SizedBox(height: 10),
+                    CustomText(
+                      text: '\$' + controller.productModel[index].price!,
+                      color: primaryColor,
+                    ),
+                  ],
+                ),
               ),
             );
           },
