@@ -119,6 +119,7 @@ class HomeScreen extends StatelessWidget {
                     productModel: controller.productModel[index]));
               },
               child: Container(
+                width: 250,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -135,9 +136,11 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(height: 10),
                     CustomText(text: controller.productModel[index].name),
                     SizedBox(height: 10),
-                    CustomText(
-                      text: controller.productModel[index].description,
-                      color: Colors.grey,
+                    Expanded(
+                      child: CustomText(
+                        text: controller.productModel[index].description,
+                        color: Colors.grey,
+                      ),
                     ),
                     SizedBox(height: 10),
                     CustomText(

@@ -23,7 +23,7 @@ class ProductModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'productId': id,
       'name': name,
       'image': image,
       'description': description,
@@ -34,7 +34,7 @@ class ProductModel {
   }
 
   ProductModel.fromMap(Map<String, dynamic> map) {
-    id = map['id'];
+    id = map['productId'];
     name = map['name'];
     image = map['image'];
     description = map['description'];

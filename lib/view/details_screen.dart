@@ -1,8 +1,11 @@
 import 'package:e_commerce_getx/constants.dart';
+import 'package:e_commerce_getx/core/view_model/cart_view_model.dart';
+import 'package:e_commerce_getx/model/cart_product_model.dart';
 import 'package:e_commerce_getx/model/product_model.dart';
 import 'package:e_commerce_getx/view/widgets/custom_button.dart';
 import 'package:e_commerce_getx/view/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class DetailsScreen extends StatelessWidget {
   final ProductModel productModel;
@@ -95,18 +98,30 @@ class DetailsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                Container(
-                  width: 150,
-                  child: CustomButton(
-                    child: CustomText(
-                      text: 'Add',
-                      color: Colors.white,
-                      alignment: Alignment.center,
-                    ),
-                    onTap: () {},
-                    color: primaryColor,
-                  ),
-                ),
+                GetBuilder<CartViewModel>(
+                    init: CartViewModel(),
+                    builder: (controller) {
+                      return Container(
+                        width: 150,
+                        child: CustomButton(
+                          child: CustomText(
+                            text: 'Add',
+                            color: Colors.white,
+                            alignment: Alignment.center,
+                          ),
+                          onTap: () {
+                            controller.addProduct(CartProductModel(
+                              id: productModel.id,
+                              name: productModel.name,
+                              image: productModel.image,
+                              price: productModel.price,
+                              quantity: 1,
+                            ));
+                          },
+                          color: primaryColor,
+                        ),
+                      );
+                    }),
               ],
             ),
           )
