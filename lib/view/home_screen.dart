@@ -17,7 +17,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeViewModel>(
-      init: Get.find<HomeViewModel>(), //fix initializing homeViewModel error
+      init: Get.put(HomeViewModel()), //fix initializing homeViewModel error
       builder: (controller) => controller.loading.value
           ? Center(child: CircularProgressIndicator())
           : Scaffold(
@@ -56,37 +56,40 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _categoriesListView() {
-    return GetBuilder<HomeViewModel>(builder: (controller) {
-      return controller.categoryModel.isEmpty
-          ? CircularProgressIndicator()
-          : Container(
-              height: 100,
-              child: ListView.separated(
-                separatorBuilder: (context, index) => SizedBox(width: 20),
-                scrollDirection: Axis.horizontal,
-                itemCount: controller.categoryModel.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Column(
-                    children: [
-                      Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.grey.shade100),
-                        child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Image.network(
-                                controller.categoryModel[index].image!)),
-                      ),
-                      SizedBox(height: 10),
-                      CustomText(text: controller.categoryModel[index].name),
-                    ],
-                  );
-                },
-              ),
-            );
-    });
+    return GetBuilder<HomeViewModel>(
+        init: Get.find(),
+        builder: (controller) {
+          return controller.categoryModel.isEmpty
+              ? CircularProgressIndicator()
+              : Container(
+                  height: 100,
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) => SizedBox(width: 20),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.categoryModel.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Column(
+                        children: [
+                          Container(
+                            height: 60,
+                            width: 60,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.grey.shade100),
+                            child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.network(
+                                    controller.categoryModel[index].image!)),
+                          ),
+                          SizedBox(height: 10),
+                          CustomText(
+                              text: controller.categoryModel[index].name),
+                        ],
+                      );
+                    },
+                  ),
+                );
+        });
   }
 
   Widget _searchFormField() {
@@ -106,6 +109,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget _productListView() {
     return GetBuilder<HomeViewModel>(
+      init: Get.find(),
       builder: (controller) => Container(
         height: 350,
         child: ListView.separated(

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:e_commerce_getx/constants.dart';
 import 'package:e_commerce_getx/model/user_model.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
