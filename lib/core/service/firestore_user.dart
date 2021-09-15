@@ -5,9 +5,14 @@ class FirestoreUser {
   final _userCollectionRef =
       FirebaseFirestore.instance.collection('eCommerceUsers');
 
-  addUserToFireStore(UserModel userModel) async {
+  Future<void> addUserToFireStore(UserModel userModel) async {
     return await _userCollectionRef
         .doc(userModel.userId)
         .set(userModel.toMap());
+  }
+
+  Future<DocumentSnapshot<Map<String, dynamic>>> getCurrentUser(
+      String uid) async {
+    return await _userCollectionRef.doc(uid).get();
   }
 }
